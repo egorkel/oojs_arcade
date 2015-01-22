@@ -1,11 +1,14 @@
 // Constants
-// Player position step
-var pl_step = 40;
+// Player init
+var pl_step = 20;
+var pl_x = 200;
+var pl_y = 400;
 // Board limitations
 var bd_left = 0;
 var bd_right = 400;
 var bd_top = 0;
 var bd_bottom = 400;
+var bd_water = 70;
 
 // Generates random nums between min and max
 var get_rnd = function (min, max) {
@@ -72,6 +75,10 @@ Player.prototype.handleInput = function (key) {
         case "up":
             if ((this.y - pl_step) >= bd_top) {
                 this.y -= pl_step;
+                if (this.y < bd_water) {
+                    this.x = pl_x;
+                    this.y = pl_y;
+                }
             }
             break;
         case "down":
@@ -92,13 +99,13 @@ var allEnemies = [];
 allEnemies.push(enemy1);
 allEnemies.push(enemy2);
 allEnemies.push(enemy3);
-player = new Player(200, 320);
+player = new Player(pl_x, pl_y);
 
 console.log(enemy1);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',

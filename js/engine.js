@@ -46,6 +46,7 @@ var Engine = (function(global) {
          * our update function since it may be used for smooth animation.
          */
         update(dt);
+        collision_detect();
         render();
 
         /* Set our lastTime variable which is used to determine the time delta
@@ -153,6 +154,13 @@ var Engine = (function(global) {
         });
 
         player.render();
+    }
+    
+    // Checking do enemies catch player
+    function collision_detect() {
+        allEnemies.forEach(function(enemy) {
+            enemy.collision(player);
+        });
     }
 
     /* This function does nothing but it could have been a good place to

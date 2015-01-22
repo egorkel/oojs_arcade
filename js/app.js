@@ -13,7 +13,7 @@ var bd_water = 70;
 // Generates random nums between min and max
 var get_rnd = function (min, max) {
     return Math.random() * (max - min) + min;
-}
+};
 
 // Superclass gor all objects in the game
 var objs = function (x, y, img) {
@@ -45,6 +45,12 @@ Enemy.prototype.update = function (dt) {
         this.speed = get_rnd(40, 300);
     }
 };
+Enemy.prototype.collision = function (pl) {
+    if (Math.abs(this.x - pl.x) < 30 && Math.abs(this.y - pl.y) <30) {
+        pl.x = pl_x;
+        pl.y = pl_y; 
+    }
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -61,32 +67,31 @@ Player.prototype.update = function () {
 };
 // Reaction on keys
 Player.prototype.handleInput = function (key) {
-    switch(key) {
-        case "right":
-            if ((this.x + pl_step) <= bd_right) {
-                this.x += pl_step;
+    switch (key) {
+    case "right":
+        if ((this.x + pl_step) <= bd_right) {
+            this.x += pl_step;
+        }
+        break;
+    case "left":
+        if ((this.x - pl_step) >= bd_left) {
+            this.x -= pl_step;
+        }
+        break;
+    case "up":
+        if ((this.y - pl_step) >= bd_top) {
+            this.y -= pl_step;
+            if (this.y < bd_water) {
+                this.x = pl_x;
+                this.y = pl_y;
             }
-            break;
-        case "left":
-            if ((this.x - pl_step) >= bd_left) {
-                this.x -= pl_step;
-            }
-            break;
-        case "up":
-            if ((this.y - pl_step) >= bd_top) {
-                this.y -= pl_step;
-                if (this.y < bd_water) {
-                    this.x = pl_x;
-                    this.y = pl_y;
-                }
-            }
-            break;
-        case "down":
-            if ((this.y + pl_step) <= bd_bottom) {
-                this.y += pl_step;
-            }
+        }
+        break;
+    case "down":
+        if ((this.y + pl_step) <= bd_bottom) {
+            this.y += pl_step;
+        }
     }
-    console.log(this.x, this.y);
 };
 
 // Now instantiate your objects.
@@ -99,13 +104,11 @@ var allEnemies = [];
 allEnemies.push(enemy1);
 allEnemies.push(enemy2);
 allEnemies.push(enemy3);
-player = new Player(pl_x, pl_y);
-
-console.log(enemy1);
+var player = new Player(pl_x, pl_y);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',

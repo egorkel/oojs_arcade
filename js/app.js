@@ -1,8 +1,8 @@
 // Constants
 // Player init
-var pl_step = 20;
-var pl_x = 200;
-var pl_y = 400;
+var pl_step = 10;
+var pl_x = 220;
+var pl_y = 470;
 var pl_height = 75;
 var pl_width = 65;
 // Enemy init
@@ -10,10 +10,10 @@ var en_height = 65;
 var en_width = 100;
 // Board limitations
 var bd_left = 0;
-var bd_right = 400;
+var bd_right = 505;
 var bd_top = 0;
-var bd_bottom = 400;
-var bd_water = 70;
+var bd_bottom = 545;//585;
+var bd_water = 130;
 
 // Generates random nums between min and max
 var get_rnd = function (min, max) {
@@ -47,7 +47,7 @@ Enemy.prototype.constructor = Enemy;
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function (dt) {
     this.x += this.speed * dt;
-    if (this.x > bd_right) {
+    if (this.x + this.width > bd_right) {
         this.x = 0;
         this.speed = get_rnd(40, 300);
     }
@@ -90,7 +90,7 @@ Player.prototype.update = function () {
 Player.prototype.handleInput = function (key) {
     switch (key) {
     case "right":
-        if ((this.x + pl_step) <= bd_right) {
+        if ((this.x + this.width + pl_step) <= bd_right) {
             this.x += pl_step;
         }
         break;
@@ -109,19 +109,19 @@ Player.prototype.handleInput = function (key) {
         }
         break;
     case "down":
-        if ((this.y + pl_step) <= bd_bottom) {
+        if ((this.y + this.height + pl_step) <= bd_bottom) {
             this.y += pl_step;
         }
     }
-    //console.log(this.x, this.y);
+//    console.log(this.x, this.y);
 };
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy(0, 60, en_width, en_height);
-var enemy2 = new Enemy(0, 145, en_width, en_height);
-var enemy3 = new Enemy(0, 230, en_width, en_height);
+var enemy1 = new Enemy(0, 140, en_width, en_height);
+var enemy2 = new Enemy(0, 222, en_width, en_height);
+var enemy3 = new Enemy(0, 305, en_width, en_height);
 var allEnemies = [];
 allEnemies.push(enemy1);
 allEnemies.push(enemy2);

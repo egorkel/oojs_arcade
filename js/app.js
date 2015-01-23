@@ -3,6 +3,11 @@
 var pl_step = 20;
 var pl_x = 200;
 var pl_y = 400;
+var pl_height = 75;
+var pl_width = 65;
+// Enemy init
+var en_height = 65;
+var en_width = 100;
 // Board limitations
 var bd_left = 0;
 var bd_right = 400;
@@ -16,11 +21,13 @@ var get_rnd = function (min, max) {
 };
 
 // Superclass gor all objects in the game
-var objs = function (x, y, img) {
+var objs = function (x, y, width, height, img) {
     // Location on the screen (x and y)
     // and image of the object
     this.x = x;
     this.y = y;
+    this.width = width;
+    this.height = height;
     this.sprite = img;
 };
 // Common methods
@@ -29,8 +36,8 @@ objs.prototype.render = function () {
 };
 
 // Enemies our player must avoid
-var Enemy = function (x, y) {
-    objs.call(this, x, y, 'images/enemy-bug.png');
+var Enemy = function (x, y, w, h) {
+    objs.call(this, x, y, w, h, "images/enemy-bug.png");
     this.speed = get_rnd(40, 300);
 };
 // Using common methods
@@ -46,17 +53,31 @@ Enemy.prototype.update = function (dt) {
     }
 };
 Enemy.prototype.collision = function (pl) {
-    if (Math.abs(this.x - pl.x) < 30 && Math.abs(this.y - pl.y) <30) {
+    // Simplest collision
+    /*if (Math.abs(this.x - pl.x) < 30 && Math.abs(this.y - pl.y) <30) {
         pl.x = pl_x;
-        pl.y = pl_y; 
+        pl.y = pl_y;
+    }*/
+    
+    // Good collision
+    // Diagonals of the rectangles
+    var pa1 = new Point(pl.x, pl.y);
+    var pa2 = new Point(pl.x + pl.width, pl.y + pl.height);
+    var pb1 = new Point(this.x, this.y);
+    var pb2 = new Point(this.x + this.width, this.y + this.height);
+    // Check for collision
+    var rec_int = IsRecIntersect(pa1, pa2, pb1, pb2);
+    if (rec_int) {
+        pl.x = pl_x;
+        pl.y = pl_y;
     }
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function (x, y) {
-    objs.call(this, x, y, 'images/char-boy.png');
+var Player = function (x, y, w, h) {
+    objs.call(this, x, y, w, h, "images/char-boy.png");
 };
 // Using common methods
 Player.prototype = Object.create(objs.prototype);
@@ -92,19 +113,20 @@ Player.prototype.handleInput = function (key) {
             this.y += pl_step;
         }
     }
+    //console.log(this.x, this.y);
 };
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy(0, 60);
-var enemy2 = new Enemy(0, 145);
-var enemy3 = new Enemy(0, 230);
+var enemy1 = new Enemy(0, 60, en_width, en_height);
+var enemy2 = new Enemy(0, 145, en_width, en_height);
+var enemy3 = new Enemy(0, 230, en_width, en_height);
 var allEnemies = [];
 allEnemies.push(enemy1);
 allEnemies.push(enemy2);
 allEnemies.push(enemy3);
-var player = new Player(pl_x, pl_y);
+var player = new Player(pl_x, pl_y, pl_width, pl_height);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

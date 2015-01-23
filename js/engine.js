@@ -46,8 +46,8 @@ var Engine = (function(global) {
          * our update function since it may be used for smooth animation.
          */
         update(dt);
-        collision_detect();
         render();
+        collision_detect();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
